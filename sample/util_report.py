@@ -28,7 +28,7 @@ def add_title_on_new_page(doc, title):
     
 
 def breakdown_tables(color, product_list, elements, product):
-    column_widths = [70, 50, 50, 55, 55, 50, 45, 45, 100]
+    column_widths = [85, 50, 50, 55, 55, 50, 45, 45, 100]
     font_size = 9
     doc_styles = getSampleStyleSheet()
     data_regular = [["Estación", "Capacidad", "Alerta (%)","Registro (%)", "Registro (L)", "Inicio", "Fin", "Duración", "Observación"]]
@@ -85,7 +85,7 @@ def list_bad_lecture(bad_lecture, doc):
     doc.add_element(KeepTogether([Paragraph("Malas Capturas", styles['Heading3']), Paragraph("Capturas que enviaron registros en ceros en Monitor System debido a problemas de la estación o externos", bullet_style), bullet_list]))
 
 def table_station_alert(station, color):
-    column_widths = [70, 50, 50]
+    column_widths = [85, 50, 50]
     font_size = 9
     data_table = [["Estación", "Fecha", "Hora Alerta"]]
     for date in station['dates']:

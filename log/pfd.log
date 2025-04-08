@@ -41,3 +41,7 @@
 2025-03-24 13:41:28,365 - INFO - [models.py] - Obteniendo datos de estacion por producto
 2025-03-24 13:44:35,875 - INFO - [models.py] - Obteniendo datos de estacion por producto
 2025-03-24 14:00:36,403 - INFO - [models.py] - Obteniendo datos de estacion por producto
+2025-04-07 12:40:17,413 - WARNING - [core.py] - Ingresa un grupo (oktan, pepe6, bapje, debug)
+2025-04-07 12:40:47,217 - INFO - [models.py] - Obteniendo datos de estacion por producto
+2025-04-07 12:43:25,701 - INFO - [models.py] - Obteniendo datos de estacion por producto
+2025-04-07 12:49:43,725 - INFO - [models.py] - Obteniendo datos de estacion por producto
