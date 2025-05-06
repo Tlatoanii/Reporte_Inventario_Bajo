@@ -126,9 +126,9 @@ def replace_data(oil_list, new_time, station, percentage, per_limits):
             oil_list.append({ "station": station, "initial_time": str(new_time), "final_time": str(new_time), "initial_per": percentage, "min_per": per, "initial_vol": str(get_oil_volume(per_limits, station, percentage)), "min_vol": str(get_oil_volume(per_limits, station, percentage)), "tank_capacity": str(get_oil_capacity(per_limits, station)), "per_limit": str(get_oil_limit_percentage(per_limits, station)), "time_low": "", "note": get_observation(str(new_time).split(' ')[1]) })
         else:
             oil_list.append({ "station": station, "initial_time": str(new_time), "final_time": str(new_time), "initial_per": percentage, "min_per": per, "initial_vol": str(get_oil_volume(per_limits, station, percentage)), "min_vol": str(get_oil_volume(per_limits, station, percentage)), "tank_capacity": str(get_oil_capacity(per_limits, station)), "per_limit": str(get_oil_limit_percentage(per_limits, station)), "time_low": "", "note": "Mala captura" })
-    
+    # print(oil_list)
     return oil_list
-    
+
 def get_observation(date: str):
     time = date.split(':')
     hours = time[0]
@@ -142,4 +142,7 @@ if __name__ == "__main__":
     # get_difference_times('2025-02-18 09:45:02', '2025-02-18 10:15:01')
     pass
 
-
+def fil_data_per_station(list_station, list_product, stations_store):
+    for list in list_product:
+        list_station[stations_store.index(list['station'])].append(list)    
+    return list_station 

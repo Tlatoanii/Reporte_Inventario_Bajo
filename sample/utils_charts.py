@@ -9,6 +9,10 @@ def stadistics_graph(data, product, month, color, doc = None):
 	# Ejemplo de gráfico
 	fig, ax = plt.subplots()
 	ax.barh(plty, [station['times_appeared'] for station in sorted_data], color= color)
+	ax.set_xticks(ax.get_xticks())
+	ax.set_xticklabels([f"{x:,.0f}" for x in ax.get_xticks()])
+	ax.set_yticks(range(len(plty)))
+	ax.set_yticklabels(plty, fontsize= 9)
 	plt.xlabel(f"# de Días con poco producto en {month}")
 	plt.title(f"{product} - {month}" )
 	plt.tight_layout()
@@ -20,8 +24,8 @@ def stadistics_graph(data, product, month, color, doc = None):
 		elements = []
 		elements.append(Paragraph(f"Estadisticas de producto bajo en {product}", styles['Heading3']))
 		elements.append(Spacer(1,12))
-		elements.append(Image(f'res/{product}_chart.png', width=500, height=300))
-		doc.add_element_at_first(KeepTogether(elements))
+		elements.append( Image(f'res/{product}_chart.png', width=400, height= 600 if (20 * len( sorted_data)) > 599 else (20 * len( sorted_data)) ) )
+		doc.add_element(KeepTogether(elements))
 
 
 if __name__ == "__main__":

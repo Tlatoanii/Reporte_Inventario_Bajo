@@ -31,13 +31,13 @@ def breakdown_tables(color, product_list, elements, product):
     column_widths = [85, 50, 50, 55, 55, 50, 45, 45, 100]
     font_size = 9
     doc_styles = getSampleStyleSheet()
-    data_regular = [["Estación", "Capacidad", "Alerta (%)","Registro (%)", "Registro (L)", "Inicio", "Fin", "Duración", "Observación"]]
+    data_regular = [ [ "Estación", "Capacidad", "Alerta (%)","Registro (%)", "Registro (L)", "Inicio", "Fin", "Duración", "Observación" ] ]
     for station in product_list:
         initial_time = str(station['initial_time']).split(' ')[1]
         initial_time = f'{initial_time.split(':')[0]}:{initial_time.split(':')[1]}'
         final_time = str(station['final_time']).split(' ')[1]
         final_time = f'{final_time.split(':')[0]}:{final_time.split(':')[1]}'
-        data_regular.append( [station['station'], '{:,} L'.format(int(station['tank_capacity'])), f'{station["per_limit"]} %', f'{station['min_per']} %', '{:,} L'.format(int(station['min_vol'])), f'{initial_time} h', f'{final_time} h', station['time_low'], station['note'] ])
+        data_regular.append( [station['station'], '{:,} L'.format(int(station['tank_capacity'])), f'{station["per_limit"]} %', f'{station['min_per']} %', '{:,} L'.format(int(station['min_vol'])), f'{initial_time} h', f'{final_time} h', station['time_low'], station['note'] ] )
     
     table = Table(data_regular, colWidths= column_widths)
     style_regular = TableStyle([
@@ -52,7 +52,6 @@ def breakdown_tables(color, product_list, elements, product):
     elements.append(Paragraph(product, doc_styles["Heading3"]))
     elements.append(table)
     return elements
-
 
 def resume_table(doc, regular_list, premium_list, diesel_list, date):
     if len(regular_list) == 0 and len(premium_list) == 0 and len(diesel_list) == 0:
@@ -149,3 +148,44 @@ def stations_resume(doc: Reports, list_regular, list_premium, list_diesel):
     if len(list_diesel) != 0:
         doc.add_element(Paragraph("Diesel", styles['Heading3']))
         get_general_statistics(doc, list_diesel, colors.Color(1.00, 0.56, 0.00))
+
+def general_table(list_product, color):
+    font_size = 9
+    column_widths = [      85     ,     50    ,      50     ,       55     ,       55      ,    100   ,   100 ,     45    ]
+    data_regular = [ [ "Estación", "Capacidad", "Alerta (%)","Registro (%)", "Registro (L)", "Fecha Inicio", "Fecha Fin", "Duración"] ]
+    for product in list_product:
+        data_regular.append( [product['station'], '{:,} L'.format(int(product['tank_capacity'])), f'{product["per_limit"]} %', f'{product['min_per']} %', '{:,} L'.format(int(product['min_vol'])), product['initial_time'], product['final_time'], product['time_low'] ] )
+    
+    table = Table(data_regular, colWidths= column_widths)
+    style_regular = TableStyle([
+        ("BACKGROUND", (0,0), (-1, 0), color),
+        ("TEXTCOLOR", (0,0), (-1, 0), colors.whitesmoke),
+        ("TEXTCOLOR", (-1, -1), (-1, -1), colors.black),
+        ("ALIGN", (0,0), (-1, -1), "CENTER"),
+        ("GRID", (0,0), (-1, -1), 1,  colors.black),
+        ("FONTSIZE", (0, 0), (-1, -1), font_size)
+    ])
+    table.setStyle(style_regular)
+    return table
+
+def station_resume_data(station_store, regular_station, premium_station, diesel_station, report: Reports):
+    try: 
+        styles = getSampleStyleSheet()
+        for index, station in enumerate(station_store):
+            if( len(regular_station[index]) == 0 and len(premium_station[index]) == 0 and len(diesel_station[index]) == 0 ):
+                continue
+            station = Paragraph(station, styles['Heading2'])
+            if len(regular_station[index]) != 0:
+                station_product = Paragraph("REGULAR", styles['Heading3'])
+                table_regular = general_table(regular_station[index], colors.Color(0.18, 0.49, 0.20))
+                report.add_element(KeepTogether( [station, station_product, Spacer(1, 12), table_regular, Spacer(1, 12)] ))
+            if len(premium_station[index]) != 0:
+                station_product = Paragraph("PREMIUM", styles['Heading3'])
+                table_premium = general_table(premium_station[index], colors.Color(0.78, 0.16, 0.16))
+                report.add_element(KeepTogether( [station, station_product, Spacer(1, 12), table_premium, Spacer(1, 12)] ))
+            if len(diesel_station[index]) != 0:
+                station_product = Paragraph("DIESEL", styles['Heading3'])
+                table_diesel = general_table(diesel_station[index], colors.Color(1.00, 0.56, 0.00))
+                report.add_element(KeepTogether( [station, station_product, Spacer(1, 12), table_diesel, Spacer(1, 12)] ))
+    except Exception as e: 
+        print(f'Error al generar tabla de resumen por estacion: {e}')
